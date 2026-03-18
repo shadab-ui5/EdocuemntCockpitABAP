@@ -1,0 +1,11 @@
+@EndUserText.label: 'E-Doc Auth Matrix'
+define service Zui_sd_edoc_auth {
+  expose ZI_SD_EDOC_AUTH           as eDocAuth;
+  expose ZI_SD_SalesArea           as salesDisChannel;
+  expose ZI_SD_SalesDivision       as salesDivision;
+  expose ZI_SD_CustomerSalesArea   as salesCustomer;
+  expose ZI_SD_BillingDocument     as billingDocument;
+  expose ZC_SD_BILLING_EDOC        as billingEdocDetails;
+  expose ZI_EDOC_STATUS_VH         as eDocStatusVH;
+  expose ZI_EDOC_OVERALL_STATUS_VH as eDocOverallStatusVH;
+}

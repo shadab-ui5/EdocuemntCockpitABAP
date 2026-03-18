@@ -1,0 +1,177 @@
+@Metadata.layer: #CORE
+
+@UI:{
+headerInfo:{
+typeName: 'E-Doc Auth. Matrix',
+typeNamePlural: 'E-Doc Auth. Matrix',
+title:{ value: 'Userid'  }
+}
+}
+annotate entity ZI_SD_EDOC_AUTH with
+{
+  @UI.facet: [
+  {
+  id: 'Details',
+  purpose: #STANDARD,
+  type: #IDENTIFICATION_REFERENCE,
+  label: 'E-Doc Auth. Matrix',
+  position: 10
+  } ]
+
+  @Consumption.valueHelpDefinition: [
+    {
+      entity: {
+        name: 'I_BusinessUserVH',
+        element: 'UserID'
+      }
+    }
+  ]
+
+  @UI:{
+  lineItem: [{ position: 10,
+               label: 'CB UserID' }],
+
+  identification: [{ position: 10,
+                     label: 'CB UserID' }],
+
+  selectionField: [{ position: 10 }]
+  }
+  Userid;
+
+  @Consumption.valueHelpDefinition: [
+    {
+      entity: {
+        name: 'I_CompanycodeVH',
+        element: 'CompanyCode'
+      }
+    }
+  ]
+
+  @UI:{
+  lineItem: [{ position: 20,
+               label: 'Company Code' }],
+
+  identification: [{ position: 20,
+                     label: 'Company Code' }],
+
+  selectionField: [{ position: 20 }]
+  }
+
+  Compcode;
+
+  @Consumption.valueHelpDefinition: [
+  {
+    entity: {
+      name: 'I_CompanycodeVH',
+      element: 'CompanyCodeName'
+    }
+  }
+  ]
+
+  @UI:{
+  lineItem: [{ position: 30,
+               label: 'Company Name' }],
+
+  identification: [{ position: 30,
+                     label: 'Company Name' }]
+
+  }
+
+  Compname;
+
+  @Consumption.valueHelpDefinition: [
+    {
+      entity: {
+        name: 'I_SalesOrganizationText',
+        element: 'SalesOrganization'
+      }
+    }
+  ]
+
+  @UI:{
+  lineItem: [{ position: 40,
+               label: 'Sales Organization' }],
+
+  identification: [{ position: 40,
+                     label: 'Sales Organization' }],
+
+  selectionField: [{ position: 40 }]
+  }
+
+
+  SalesOrg;
+
+  @Consumption.valueHelpDefinition: [
+    {
+      entity: {
+        name: 'I_SalesOrganizationText',
+        element: 'SalesOrganizationName'
+      }
+    }
+  ]
+
+  @UI:{
+  lineItem: [{ position: 50,
+               label: 'Sales Org. Name' }],
+
+  identification: [{ position: 50,
+                     label: 'Sales Org. Name' }]
+
+  }
+
+  Salesorgname;
+
+  @Consumption.valueHelpDefinition: [
+    {
+      entity: {
+        name: 'I_Plant',
+        element: 'Plant'
+      }
+    }
+  ]
+
+
+  @UI:{
+  lineItem: [{ position: 60,
+               label: 'Plant Code' }],
+
+  identification: [{ position: 60,
+                     label: 'Plant Code' }],
+
+  selectionField: [{ position: 60 }]
+  }
+
+  Plant;
+
+  @Consumption.valueHelpDefinition: [
+   {
+     entity: {
+       name: 'I_Plant',
+       element: 'PlantName'
+     }
+   }
+  ]
+
+
+  @UI:{
+  lineItem: [{ position: 70,
+               label: 'Plant Name' }],
+
+  identification: [{ position: 70,
+                     label: 'Plant Name' }]
+  }
+
+  Plantname;
+
+  @UI:{
+  lineItem: [{ position: 80,
+               label: 'E-Doc Type' }],
+
+  identification: [{ position: 80,
+                     label: 'E-Doc Type' }]
+  }
+
+  Type;
+
+
+}

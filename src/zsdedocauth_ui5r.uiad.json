@@ -1,0 +1,34 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "E-Doc Auth Matrix",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD",
+    "targetMappingTitle": "EDocument Cockpit Auth Matrix"
+  },
+  "ui5AppDetails": {
+    "appId": "zsdedocauth"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_4FC767D5B132325EE3A5C97FE0D319316363544F_TM",
+    "semanticObject": "ZSDEDOCAUTH",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_4FC767D5B132325EE3A5C97FE0D319316363544F_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "EDocument Cockpit Auth Matrix"
+      }
+    }
+  ]
+}

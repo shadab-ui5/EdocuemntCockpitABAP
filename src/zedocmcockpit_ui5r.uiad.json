@@ -1,0 +1,34 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "An SAP Fiori application.",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD",
+    "targetMappingTitle": "EDocument Cockpit"
+  },
+  "ui5AppDetails": {
+    "appId": "sap.ttl.edocumentcockpit"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_625D35E7263C12F5F3E53B33A150E3536843DE1B_TM",
+    "semanticObject": "edocumentcockpit",
+    "action": "managed",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_625D35E7263C12F5F3E53B33A150E3536843DE1B_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "EDocument Cockpit"
+      }
+    }
+  ]
+}

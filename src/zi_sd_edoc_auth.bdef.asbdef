@@ -1,0 +1,14 @@
+managed; // implementation in class zbp_i_sd_edoc_auth unique;
+//strict ( 2 );
+
+define behavior for ZI_SD_EDOC_AUTH //alias <alias_name>
+persistent table zsdredocrole
+lock master
+//authorization master ( instance )
+//etag master <field_name>
+{
+  create; // ( authorization : global );
+  update;
+  delete;
+  field ( readonly : update ) Userid, Plant, Type;
+}

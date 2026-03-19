@@ -23,6 +23,7 @@ define view entity ZI_SD_EDOCINV
       einvcanceltime     as Einvcanceltime,
       qrcode             as Qrcode,
       signedqrcode       as Signedqrcode,
+      signedqrcodestr    as Signedqrcodestr,
       signedinvoice      as Signedinvoice,
       ewaybillno         as Ewaybillno,
       ewaycreatedate     as Ewaycreatedate,

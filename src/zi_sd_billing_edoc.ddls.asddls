@@ -53,6 +53,7 @@ define view entity ZI_SD_BILLING_EDOC
       Edoc.Einvcanceltime,
       Edoc.Qrcode,
       Edoc.Signedqrcode,
+      Edoc.Signedqrcodestr,
       Edoc.Signedinvoice,
       Edoc.Ewaybillno,
       Edoc.Ewaycreatedate,

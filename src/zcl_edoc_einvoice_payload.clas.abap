@@ -190,6 +190,8 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
 
     DATA lt_invoice TYPE tt_invoice.
 
+    DATA lv_loop_count TYPE i.
+
 *-- Read all required data first
 
     IF it_billing IS INITIAL.
@@ -216,8 +218,8 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
 
     SELECT *
     FROM zi_einv_partner
-    FOR ALL ENTRIES IN @it_billing
-    WHERE billingdocument = @it_billing-vbeln
+*    FOR ALL ENTRIES IN @it_billing
+*    WHERE billingdocument = @it_billing-vbeln
     INTO TABLE @DATA(lt_partner).
 
     SELECT *
@@ -233,7 +235,8 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
     SORT lt_header  BY billingdocument.
     SORT lt_item    BY billingdocument billingdocumentitem.
     SORT lt_pricing BY billingdocument billingdocumentitem conditiontype.
-    SORT lt_partner BY billingdocument.
+*    SORT lt_partner BY billingdocument.
+    SORT lt_partner BY customer.
     SORT lt_plant   BY billingdocument.
     SORT lt_gst     BY businessplace.
 
@@ -242,7 +245,7 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
     LOOP AT lt_header INTO DATA(ls_head).
 
       DATA(ls_invoice) = VALUE ty_invoice( ).
-      CLEAR ls_invoice-valdtls.
+      CLEAR: ls_invoice-valdtls, lv_loop_count.
 
 * Header Mapping
       ls_invoice-custdocno = ls_head-documentreferenceid.
@@ -325,30 +328,56 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
 
       ENDIF.
 
-* Ship To Mapping
-      READ TABLE lt_partner INTO DATA(ls_ship)
-        WITH KEY billingdocument = ls_head-billingdocument
-        BINARY SEARCH.
-
-      IF sy-subrc = 0.
-
-        ls_invoice-shipdtls-gstin = ls_ship-shiptogstin.
-
-        ls_invoice-shipdtls-lglnm =
-        |{ ls_ship-shiptoname1 } { ls_ship-shiptoname2 }|.
-
-        ls_invoice-shipdtls-trdnm = ls_invoice-shipdtls-lglnm.
-
-        ls_invoice-shipdtls-addr1 = ls_ship-shiptostreet.
-        ls_invoice-shipdtls-loc   = ls_ship-shiptocity.
-        ls_invoice-shipdtls-pin   = ls_ship-shiptopostalcode.
-        ls_invoice-shipdtls-stcd  = get_gst_state_code( ls_ship-shiptoregion ).
-
-      ENDIF.
+** Ship To Mapping
+*      READ TABLE lt_partner INTO DATA(ls_ship)
+*        WITH KEY billingdocument = ls_head-billingdocument
+*        BINARY SEARCH.
+*
+*      IF sy-subrc = 0.
+*
+*        ls_invoice-shipdtls-gstin = ls_ship-shiptogstin.
+*
+*        ls_invoice-shipdtls-lglnm =
+*        |{ ls_ship-shiptoname1 } { ls_ship-shiptoname2 }|.
+*
+*        ls_invoice-shipdtls-trdnm = ls_invoice-shipdtls-lglnm.
+*
+*        ls_invoice-shipdtls-addr1 = ls_ship-shiptostreet.
+*        ls_invoice-shipdtls-loc   = ls_ship-shiptocity.
+*        ls_invoice-shipdtls-pin   = ls_ship-shiptopostalcode.
+*        ls_invoice-shipdtls-stcd  = get_gst_state_code( ls_ship-shiptoregion ).
+*
+*      ENDIF.
 
 * Item Loop
       LOOP AT lt_item INTO DATA(ls_item)
       WHERE billingdocument = ls_head-billingdocument.
+
+        lv_loop_count = sy-tabix.
+
+        IF lv_loop_count = 1.
+
+* Ship To Mapping
+          READ TABLE lt_partner INTO DATA(ls_ship)
+            WITH KEY customer = ls_item-shiptoparty
+            BINARY SEARCH.
+
+          IF sy-subrc = 0.
+
+            ls_invoice-shipdtls-gstin = ls_ship-shiptogstin.
+
+            ls_invoice-shipdtls-lglnm =
+            |{ ls_ship-shiptoname1 } { ls_ship-shiptoname2 }|.
+
+            ls_invoice-shipdtls-trdnm = ls_invoice-shipdtls-lglnm.
+
+            ls_invoice-shipdtls-addr1 = ls_ship-shiptostreet.
+            ls_invoice-shipdtls-loc   = ls_ship-shiptocity.
+            ls_invoice-shipdtls-pin   = ls_ship-shiptopostalcode.
+            ls_invoice-shipdtls-stcd  = get_gst_state_code( ls_ship-shiptoregion ).
+
+          ENDIF.
+        ENDIF.
 
         DATA(lv_unit) =
           SWITCH string( ls_item-billingquantityunit
@@ -667,6 +696,7 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
              DATA(lv_t).
 
         REPLACE ALL OCCURRENCES OF '-' IN lv_d WITH ''.
+        REPLACE ALL OCCURRENCES OF ':' IN lv_t WITH ''.
 
         lv_date = lv_d.
         lv_time = lv_t.
@@ -691,12 +721,38 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
             ls_edoc-ackdate      = lv_date.
             ls_edoc-acktime      = lv_time.
 
+            DATA lv_inv_x TYPE xstring.
+
+*            IF ls_inv-signedinvoice IS NOT INITIAL.
+*
+*              TRY.
+*                  lv_inv_x = cl_web_http_utility=>decode_base64( ls_inv-signedinvoice ).
+*                  ls_edoc-signedinvoice = lv_inv_x.
+*                CATCH cx_root.
+*              ENDTRY.
+*
+*            ENDIF.
+
             ls_edoc-signedinvoice = ls_inv-signedinvoice.
-            ls_edoc-signedqrcode  = ls_inv-signedqrcode.
+
+*            DATA lv_xstring TYPE xstring.
+
+*            IF ls_inv-signedqrcode IS NOT INITIAL.
+
+*              TRY.
+*                  lv_xstring = cl_web_http_utility=>decode_base64( ls_inv-signedqrcode ).
+*                  ls_edoc-signedqrcode = lv_xstring.
+*                CATCH cx_root INTO DATA(lx).
+*
+*              ENDTRY.
+*
+*            ENDIF.
+
+            ls_edoc-signedqrcodestr  = ls_inv-signedqrcode.
             ls_edoc-qrcode        = ls_inv-qrcode.
 
             ls_edoc-edocstatus        = 'EINVOICE_GENERATED'.
-            ls_edoc-edocoverallstatus = 'COMPLETED'.
+*            ls_edoc-edocoverallstatus = 'COMPLETED'.
 
             lv_success = lv_success + 1.
             lv_success_docs = |{ lv_success_docs } , { ls_inv-custdocno }|.
@@ -1081,6 +1137,24 @@ CLASS zcl_edoc_einvoice_payload IMPLEMENTATION.
     REPLACE ALL OCCURRENCES OF '"AttribDtls":""'  IN cv_json WITH '"AttribDtls":null'.
     REPLACE ALL OCCURRENCES OF '"AttribDtls": ""' IN cv_json WITH '"AttribDtls":null'.
 
+
+* EMPTY STRING is converted to NULL
+
+* Phone & Email (Seller / Buyer / Ship etc.)
+    REPLACE ALL OCCURRENCES OF '"Ph":""'  IN cv_json WITH '"Ph":null'.
+    REPLACE ALL OCCURRENCES OF '"Ph": ""' IN cv_json WITH '"Ph":null'.
+
+    REPLACE ALL OCCURRENCES OF '"Em":""'  IN cv_json WITH '"Em":null'.
+    REPLACE ALL OCCURRENCES OF '"Em": ""' IN cv_json WITH '"Em":null'.
+
+* ADDRESS OPTIONAL FIELDS
+    REPLACE ALL OCCURRENCES OF '"Addr2":""'  IN cv_json WITH '"Addr2":null'.
+    REPLACE ALL OCCURRENCES OF '"Addr2": ""' IN cv_json WITH '"Addr2":null'.
+
+
+** GENERIC
+*    REPLACE ALL OCCURRENCES OF ': ""' IN cv_json WITH ': null'.
+*    REPLACE ALL OCCURRENCES OF ':""' IN cv_json WITH ':null'.
 
   ENDMETHOD.
 ENDCLASS.

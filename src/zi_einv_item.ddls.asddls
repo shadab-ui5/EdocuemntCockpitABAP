@@ -27,7 +27,12 @@ define view entity ZI_EINV_ITEM
       Item.TaxCode,
       Item.TransactionCurrency,
 
-      Product.ConsumptionTaxCtrlCode as HSNCode
+      Product.ConsumptionTaxCtrlCode as HSNCode,
+
+      Item.ShipToParty,
+      Item.PayerParty,
+      Item.SoldToParty,
+      Item.BillToParty
 
 }
 where

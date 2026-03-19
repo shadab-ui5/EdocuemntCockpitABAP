@@ -116,8 +116,11 @@ define view entity ZC_SD_BILLING_EDOC
       @EndUserText.label: 'QR Code'
       Qrcode,
 
+//      @EndUserText.label: 'Signed QR Code'
+//      Signedqrcode,
+      
       @EndUserText.label: 'Signed QR Code'
-      Signedqrcode,
+      Signedqrcodestr as Signedqrcode,
 
       @EndUserText.label: 'Signed Invoice'
       Signedinvoice,

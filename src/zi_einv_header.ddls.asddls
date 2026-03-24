@@ -13,6 +13,8 @@ define view entity ZI_EINV_HEADER
 
     left outer join I_Address_2              as Address  on Address.AddressID = Partner.AddressID
 
+    left outer join I_CompanyCode            as compcode on compcode.CompanyCode = Billing.CompanyCode
+
 {
   key Billing.BillingDocument,
 
@@ -32,6 +34,19 @@ define view entity ZI_EINV_HEADER
       Billing.TotalNetAmount,
       @Semantics.amount.currencyCode: 'TransactionCurrency'
       Billing.TotalTaxAmount,
+      Billing.AccountingExchangeRate,
+
+      Billing.YY1_Port_DetailsCode_BDH, // LglNm, TrdNm for shiping details - Export case
+      Billing.YY1_LRGCNNumber_BDH, //
+      Billing.YY1_Date_BDH,
+      Billing.YY1_Port_DetailsName_BDH,
+      Billing.YY1_Port_DetailsPin_BDH, // Pin code for export
+      Billing.YY1_Port_DetailsState_BDH, // Stcd
+      Billing.YY1_Port_DetailsADRES_BDH,
+      Billing.YY1_Port_DetailsSName_BDH,
+      Billing.Country,
+
+      compcode.CompanyCodeName,
 
       Partner.Customer          as BuyerCustomer,
 
@@ -43,5 +58,7 @@ define view entity ZI_EINV_HEADER
       Address.CityName          as BuyerCity,
       Address.PostalCode        as BuyerPostalCode,
       Address.Region            as BuyerRegion
+
+
 
 }

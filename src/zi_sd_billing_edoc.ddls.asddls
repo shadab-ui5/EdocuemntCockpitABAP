@@ -65,18 +65,20 @@ define view entity ZI_SD_BILLING_EDOC
       Edoc.Ewaycancdate,
       Edoc.Ewaycanctime,
 
-      Edoc.Transporterid,
-      Edoc.Transdocno,
-      Edoc.Transdocdate,
-      Edoc.Transdistance,
-      Edoc.Vehicleno,
-      Edoc.Vehicletype,
-      Edoc.Transportmode,
-      Edoc.Transportername,
-      Edoc.Transportergstin,
-      
+
+
+      Billing.Transporterid,
+      Billing.Transdocno,
+      Billing.Transdocdate,
+      Billing.Transdistance,
+      Billing.Vehicleno,
+      Billing.Vehicletype,
+      Billing.Transportmode,
+      Billing.Transportername,
+      Billing.Transportergstin,
+
       Edoc.Errormessage,
-      
+
       case
 
           when Edoc.Billingdocument is null

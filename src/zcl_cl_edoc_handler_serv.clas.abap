@@ -8,10 +8,22 @@ CLASS zcl_cl_edoc_handler_serv DEFINITION
 
     "Structure for one billing document
     TYPES: BEGIN OF ty_item,
-             billingdocument TYPE string,
-             irn             TYPE string,
-             reason          TYPE string,
-             remarks         TYPE string,
+             billingdocument  TYPE string,
+             irn              TYPE string,
+             reason           TYPE string,
+             remarks          TYPE string,
+
+             "Eway fields
+             transporterid    TYPE string,
+             transdocno       TYPE string,
+             transdocdate     TYPE string,
+             transdistance    TYPE string,
+             vehicleno        TYPE string,
+             vehicletype      TYPE string,
+             transportmode    TYPE string,
+             transportername  TYPE string,
+             transportergstin TYPE string,
+
            END OF ty_item.
 
     "Table of billing documents
@@ -32,7 +44,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_CL_EDOC_HANDLER_SERV IMPLEMENTATION.
+CLASS zcl_cl_edoc_handler_serv IMPLEMENTATION.
 
 
   METHOD if_http_service_extension~handle_request.
@@ -146,8 +158,68 @@ CLASS ZCL_CL_EDOC_HANDLER_SERV IMPLEMENTATION.
 
 
       WHEN 'GEN_EWAY'.
-*          lv_message =
-*          |E-Way Bill action received for { lv_bill }|.
+
+        TYPES: BEGIN OF ty_eway,
+                 billingdocument  TYPE vbeln,
+                 irn              TYPE string,
+                 transporterid    TYPE string,
+                 transdocno       TYPE string,
+                 transdocdate     TYPE char10,
+                 transdistance    TYPE string,
+                 vehicleno        TYPE string,
+                 vehicletype      TYPE string,
+                 transportmode    TYPE string,
+                 transportername  TYPE string,
+                 transportergstin TYPE string,
+               END OF ty_eway.
+
+        TYPES tt_eway TYPE STANDARD TABLE OF ty_eway WITH EMPTY KEY.
+
+        DATA lt_eway TYPE tt_eway.
+
+        LOOP AT it_data-items INTO ls_item.
+
+          lv_billing_doc = ls_item-billingdocument.
+          lv_billing_doc = |{ lv_billing_doc ALPHA = IN }|.
+
+          DATA(ls_eway) = VALUE ty_eway(
+            billingdocument  = lv_billing_doc
+            irn              = ls_item-irn
+            transporterid    = ls_item-transporterid
+            transdocno       = ls_item-transdocno
+            transdocdate     = ls_item-transdocdate
+            transdistance    = ls_item-transdistance
+            vehicleno        = ls_item-vehicleno
+            vehicletype      = ls_item-vehicletype
+            transportmode    = ls_item-transportmode
+            transportername  = ls_item-transportername
+            transportergstin = ls_item-transportergstin
+          ).
+
+          APPEND ls_eway TO lt_eway.
+
+        ENDLOOP.
+
+        IF lt_eway IS INITIAL.
+
+          lv_message = 'No E-Way data received'.
+
+        ELSE.
+
+          TRY.
+
+              lv_message =
+                zcl_edoc_einvoice_payload=>create_ewaybill(
+                  it_eway = lt_eway ).
+
+            CATCH cx_root INTO lx_error.
+
+              lv_message = lx_error->get_text( ).
+
+          ENDTRY.
+
+        ENDIF.
+
 
       WHEN 'CANCEL_EWAY'.
 *          lv_message =

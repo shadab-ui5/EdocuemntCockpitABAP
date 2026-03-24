@@ -14,7 +14,7 @@ define view entity ZI_SD_BillingDocument
       }]
   key Billing.BillingDocument,
 
-      Billing.BillingDocumentType as BillingType,
+      Billing.BillingDocumentType        as BillingType,
 
       @Consumption.filter: { selectionType: #RANGE }
       @Consumption.valueHelpDefinition: [{
@@ -44,7 +44,7 @@ define view entity ZI_SD_BillingDocument
       @Consumption.valueHelpDefinition: [{
           entity: { name: 'I_Customer', element: 'Customer' }
       }]
-      Billing.SoldToParty         as Customer,
+      Billing.SoldToParty                as Customer,
 
       Customer.CustomerName,
 
@@ -77,7 +77,27 @@ define view entity ZI_SD_BillingDocument
       Billing.PurchaseOrderByCustomer,
       Billing.AssignmentReference,
       Billing.AccountingDocument,
-      Billing.DocumentReferenceID
+      Billing.DocumentReferenceID,
+
+      Billing.YY1_Transactiontype_BDH    as TransactionType,
+      Billing.YY1_TransporterDe1_BDH     as Transporterid,
+      Billing.YY1_TransporterDe2_BDH     as Transportername,
+      Billing.YY1_ModeofTransport_BDH    as Transportmode,
+      Billing.YY1_TransporterDocumen_BDH as Transdocno,
+      Billing.YY1_TransporterDocDate_BDH as Transdocdate,
+      Billing.YY1_VehicleType_BDH        as Vehicletype,
+      Billing.YY1_RouteID25_BDH          as Transdistance,
+      Billing.YY1_VehicleNumber_BDH      as Vehicleno,
+      Billing.YY1_TransporterDe3_BDH     as Transportergstin,
+
+      Billing.YY1_Port_DetailsName_BDH   as PortName,
+      Billing.YY1_Port_DetailsState_BDH  as PortStateCode,
+      Billing.YY1_Port_DetailsPin_BDH    as PortPin,
+      Billing.YY1_Port_DetailsADRES_BDH  as PortAddress,
+      Billing.YY1_Port_DetailsSName_BDH  as PortLocation,
+      Billing.YY1_Port_DetailsCode_BDH   as PortCode,
+
+      Billing.YY1_Date_BDH               as ShippingDate
 
 }
 where
